@@ -7,7 +7,7 @@ export default function Home() {
 
       <Input />
 
-      <Button size="lg">
+      <Button>
         Primary
       </Button>
 
