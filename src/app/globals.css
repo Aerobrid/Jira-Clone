@@ -1,17 +1,22 @@
+/* Importing CSS Tailwind styles */ 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Default font */
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* custom utility class */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 }
 
+/* Base styles */ 
+/*  A CSS variable starts with a --, and :root is a CSS selector targeting top-level elements */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -68,6 +73,7 @@ body {
   }
 }
 
+/* Layer utility */
 @layer base {
   * {
     border: var(--border);
