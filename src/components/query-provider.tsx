@@ -36,6 +36,7 @@ function getQueryClient() {
   }
 }
 
+// anything react can render can be a child of QueryClientProvider
 interface QueryProviderProps {
   children: React.ReactNode
 }

@@ -37,6 +37,8 @@ export default function RootLayout({
       <body
         className={cn(inter.className, "antialiased min-h-screen")}
       >
+        {/* QueryProvider is used to provide the query client to the application */}
+        {/* This allows you to use the useQuery and useMutation hooks in your components */}
         <QueryProvider>
           {children}
         </QueryProvider>
