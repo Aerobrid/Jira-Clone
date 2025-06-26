@@ -20,7 +20,7 @@ export const useLogin = () => {
     Error,
     RequestType
   >({
-    // The mutation function that will be called when the mutation is triggered
+    // when called, a request is made to the login endpoint
     mutationFn: async ({ json }) => {
       // takes json data from the request and makes a POST request to the login endpoint
       const response = await client.api.auth.login["$post"]({ json });
@@ -28,6 +28,6 @@ export const useLogin = () => {
       return  await response.json();
     },
   });
-
+  // Return the mutation object with properties like isLoading, error, and mutate
 	return mutation;
 };
