@@ -1,14 +1,23 @@
+// to generate unique IDs for users
 import { ID } from "node-appwrite";
+// Importing necessary modules from Hono framework
 import { Hono } from "hono";
+// request validation
 import { zValidator } from "@hono/zod-validator";
+// (functions that set/delete cookies in HTTP responses)
 import { deleteCookie, setCookie } from "hono/cookie";
 
+// validation schemas for login and registration
 import { loginSchema, registerSchema } from "../schemas";
+// cookie name constant for authentication
 import { AUTH_COOKIE } from "../constants";
 
+// Importing the createAdminClient function to interact with Appwrite's account service
 import { createAdminClient } from "@/lib/appwrite";
+// Importing session middleware to check user sessions and attach user data to requests
 import { sessionMiddleware } from "@/lib/session-middleware";
 
+// new hono instance to handle authentication routes
 const app = new Hono()
   .get(
     "/current",
@@ -21,17 +30,21 @@ const app = new Hono()
   )
   .post(
     "/login",
+    // Using zValidator to validate the request body against the loginSchema
     zValidator("json", loginSchema),
     async (c) => {
+      // Extracting email and password from the validated request body
       const { email, password } = c.req.valid("json");
 
       const { account } = await createAdminClient();
 
+      // create a session using the provided email and password
       const session = await account.createEmailPasswordSession(
         email,
         password,
       );
 
+      // Set the session secret in a cookie for authentication
       setCookie(c, AUTH_COOKIE, session.secret, {
         path: "/",
         httpOnly: true,
@@ -43,6 +56,7 @@ const app = new Hono()
       return c.json({ success: true });
     }
   )
+  // same process for registration
   .post(
     "/register",
     zValidator("json", registerSchema),
@@ -74,8 +88,12 @@ const app = new Hono()
     }
   )
   .post("/logout", sessionMiddleware, async (c) => {
+    // "sessionMiddleware" ensures user is authenticated before proceeding
+    // get the account object from the context set by the middleware
     const account = c.get("account");
 
+    // delete the authentication cookie
+    // and delete the current session from Appwrite
     deleteCookie(c, AUTH_COOKIE);
     await account.deleteSession("current");
 

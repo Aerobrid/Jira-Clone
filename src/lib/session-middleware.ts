@@ -1,5 +1,6 @@
 import "server-only";
 
+// importing necessary Appwrite modules for user authentication and database operations
 import { 
     Account, 
     Client,
@@ -12,11 +13,13 @@ import {
     type Users as UsersType,
 } from "node-appwrite"
 
+// "getCookie" retrieves cookies from the request, and "createMiddleware" creates a middleware
 import { getCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
 
 import { AUTH_COOKIE } from "@/features/auth/constants";
 
+// Defining the shape of the context variables
 type AdditionalContext = {
 	Variables: {
 		account: AccountType;
@@ -27,6 +30,8 @@ type AdditionalContext = {
 	};	
 };
 
+// checks if the user is authenticated by verifying the session cookie
+// if authenticated, it sets the account, databases, storage, and user in the context 
 export const sessionMiddleware = createMiddleware<AdditionalContext>(
   async (c, next) => {
     const client = new Client()
