@@ -1,11 +1,15 @@
-"use client";
+import { redirect } from "next/navigation";
 
-// import sign-in card component for the sign-in page
+import { getCurrent } from "@/features/auth/actions";
 import { SignInCard } from "@/features/auth/components/sign-in-card";
 
 // SignInPage wrapper component using the SignInCard component
-const SignInPage = () => {
-  return <SignInCard />
+const SignInPage = async () => {
+  const user = await getCurrent();
+
+  if (user) redirect("/");
+
+  return <SignInCard />;
 };
 
 // export the SignInPage component 

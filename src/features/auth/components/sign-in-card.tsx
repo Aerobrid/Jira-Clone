@@ -1,3 +1,5 @@
+"use client";
+
 // importing link utility from nextjs for navigation
 import Link from "next/link";
 // sign-in icons
@@ -41,7 +43,7 @@ import { useLogin } from "../api/use-login";
 export const SignInCard = () => {
   // destructuring the mutate function from the useLogin hook
   // this function will be used to send the login request with the form values
-  const { mutate } = useLogin();
+  const { mutate, isPending } = useLogin();
 
   // the form will have fields for email and password, both of which are required and by default empty
   // z.infer means figure out what the types are from loginSchema (for type safety)
@@ -109,7 +111,7 @@ export const SignInCard = () => {
                 </FormItem>
               )}
             />
-            <Button disabled={false} size={"lg"} className="w-full">
+            <Button disabled={isPending} size={"lg"} className="w-full">
               Login
             </Button>
           </form>
@@ -120,11 +122,11 @@ export const SignInCard = () => {
       </div>
       { /* CardContent for social login buttons */ }
       <CardContent className="p-7 flex flex-col gap-y-4">
-        <Button variant="secondary" size={"lg"} className="w-full" disabled={false}>
+        <Button variant="secondary" size={"lg"} className="w-full" disabled={isPending}>
           <FcGoogle className="mr-2 size-5" />
           Login with Google
         </Button>
-        <Button variant="secondary" size={"lg"} className="w-full" disabled={false}>
+        <Button variant="secondary" size={"lg"} className="w-full" disabled={isPending}>
           <FaGithub className="mr-2 size-5" />         
           Login with GitHub
         </Button>
