@@ -2,7 +2,6 @@
 import { redirect } from "next/navigation";
 
 import { getCurrent } from "@/features/auth/actions";
-import { UserButton } from "@/features/auth/components/user-button";
 
 // Home component is the main component for the home page
 export default async function Home() {
@@ -12,7 +11,7 @@ export default async function Home() {
 
   return (
     <div>
-      <UserButton />
+      This is home page.
     </div>
   );
 };
