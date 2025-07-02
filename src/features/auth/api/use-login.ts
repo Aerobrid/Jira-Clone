@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 // useMutation hook for user login
 // we can use this hook since we wrapped the app with the QueryProvider in layout.tsx
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -27,14 +28,23 @@ export const useLogin = () => {
     mutationFn: async ({ json }) => {
       // takes json data from the request and makes a POST request to the login endpoint
       const response = await client.api.auth.login["$post"]({ json });
+      
+      if (!response.ok) {
+        throw new Error("Failed to log in");
+      }
+      
       // returns the parsed JSON response from the API
       return  await response.json();
     },
     onSuccess: () => {
+      toast.success("Logged in");
       // on successful login refresh the page
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["current"] });
-    }
+    },
+    onError: () => {
+      toast.error("Failed to log in");
+    },
   });
   // Return the mutation object with properties like isLoading, error, and mutate
 	return mutation;

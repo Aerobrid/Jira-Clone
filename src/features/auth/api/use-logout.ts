@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 // same imports for the logout functionality
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { InferResponseType } from "hono";
@@ -22,14 +23,23 @@ export const useLogout = () => {
     // the request does not require any body, so we don't pass any parameters
     mutationFn: async () => {
       const response = await client.api.auth.logout["$post"]();
+
+      if (!response.ok) {
+        throw new Error("Failed to log out");
+      }
+
       return  await response.json();
     },
     // if mutation is a success (response is ok), invalidate the "current" query
     // this means that the next time the "current" query is used, it will refetch the data
     // this is important to ensure that the user data is up-to-date after logout
     onSuccess: () => {
+      toast.success("Logged out");
       router.refresh();
       queryClient.invalidateQueries({ queryKey: ["current"] });
+    },
+    onError: () => {
+      toast.error("Failed to log out");
     }
   });
 
