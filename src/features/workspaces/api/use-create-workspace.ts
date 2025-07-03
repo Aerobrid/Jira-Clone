@@ -23,9 +23,9 @@ export const useCreateWorkspace = () => {
     RequestType
   >({
     // when called, a request is made to the login endpoint
-    mutationFn: async ({ json }) => {
+    mutationFn: async ({ form }) => {
       // takes json data from the request and makes a POST request to the login endpoint
-      const response = await client.api.workspaces["$post"]({ json });
+      const response = await client.api.workspaces["$post"]({ form });
       
       if (!response.ok) {
         throw new Error("Failed to create workspace");
