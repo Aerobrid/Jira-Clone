@@ -5,7 +5,7 @@ import { ID } from "node-appwrite";
 import { createWorkspaceSchema } from "../schemas";
 
 import { sessionMiddleware } from "@/lib/session-middleware";
-import { DATABASE_ID, WORKSPACES_ID, IMAGES_BUCKET_ID } from "@/config";
+import { DATABASE_ID, WORKSPACES_ID, IMAGES_BUCKET_ID, APPW_ENDPOINT, APPW_PROJECT_ID } from "@/config";
 
 const app = new Hono()
   .post(
@@ -31,12 +31,10 @@ const app = new Hono()
 
         uploadedImageId = file.$id;
 
-        const arrayBuffer = await storage.getFilePreview(
-          IMAGES_BUCKET_ID,
-          file.$id,
-        );
+        // Clean up APPWRITE_ENDPOINT to avoid double /v1
+        const endpoint = APPW_ENDPOINT.replace(/\/v1$/, "");
 
-        uploadedImageUrl = `data:image/png;base64,${Buffer.from(arrayBuffer).toString("base64")}`;
+        uploadedImageUrl = `${endpoint}/v1/storage/buckets/${IMAGES_BUCKET_ID}/files/${uploadedImageId}/view?project=${APPW_PROJECT_ID}&mode=admin`;
       }
 
       const workspace = await databases.createDocument(
