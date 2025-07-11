@@ -1,6 +1,8 @@
 import { SideBar } from '@/components/sidebar';
 import { Navbar } from '@/components/navbar';
 
+import { CreateWorkspaceModel } from '@/features/workspaces/components/create-workspace-model';
+
 interface DashBoardLayoutProps {
   children: React.ReactNode;
 };
@@ -8,6 +10,7 @@ interface DashBoardLayoutProps {
 const DashBoardLayout = ({ children }: DashBoardLayoutProps) => {
   return (
     <div className="min-h-screen">
+      <CreateWorkspaceModel />
       <div className="flex w-full h-full">
         <div className="fixed left-0 top-0 hidden lg:block lg:w-[264px] h-full overflow-y-auto">
           <SideBar />
