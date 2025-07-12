@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import { ImageIcon } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -159,6 +160,7 @@ export const CreateWorkspaceForm = ({ onCancel }: CreateWorkspaceFormProps) => {
                 variant="secondary"
                 onClick={onCancel}
                 disabled={isPending}
+                className={cn(!onCancel && "invisible")}
               >
                 Cancel
               </Button>
