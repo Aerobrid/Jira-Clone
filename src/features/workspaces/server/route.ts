@@ -2,9 +2,10 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { ID, Query } from "node-appwrite";
 
-import { createWorkspaceSchema } from "../schemas";
+import { createWorkspaceSchema, updateWorkspaceSchema } from "../schemas";
 
 import { MemberRole } from "@/features/members/types";
+import { getMember } from "@/features/members/utils";
 
 import { sessionMiddleware } from "@/lib/session-middleware";
 import { generateInviteCode } from "@/lib/utils";
@@ -94,6 +95,63 @@ const app = new Hono()
 
       return c.json({ data: workspace });
     }
-  );    
+  )
+  .patch(
+    "/:workspaceId",
+    sessionMiddleware,
+    zValidator("form", updateWorkspaceSchema),
+    async (c) => {
+      const databases = c.get("databases");
+      const storage = c.get("storage");
+      const user = c.get("user");
+
+      const { workspaceId } = c.req.param();
+      const { name, image } = c.req.valid("form");
+
+      const member = await getMember({
+        databases,
+        userId: user.$id,
+        workspaceId,
+      });
+
+      if (!member || member.role !== MemberRole.ADMIN) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      let uploadedImageUrl: string | undefined;
+      let uploadedImageId: string | undefined;
+      
+      if (image instanceof File) {
+        const file = await storage.createFile(
+          IMAGES_BUCKET_ID,
+          ID.unique(),
+          image,
+        );
+
+        uploadedImageId = file.$id;
+
+        // Clean up APPWRITE_ENDPOINT to avoid double /v1
+        const endpoint = APPW_ENDPOINT.replace(/\/v1$/, "");
+
+        uploadedImageUrl = `${endpoint}/v1/storage/buckets/${IMAGES_BUCKET_ID}/files/${uploadedImageId}/view?project=${APPW_PROJECT_ID}&mode=admin`;
+      } else {
+        uploadedImageId = undefined;
+        uploadedImageUrl = image === "" ? undefined : image;
+      }
+
+      const workspace = await databases.updateDocument(
+        DATABASE_ID,
+        WORKSPACES_ID,
+        workspaceId,
+        {
+          name,
+          imageId: uploadedImageId,
+          imageUrl: uploadedImageUrl,
+        },
+      );
+
+      return c.json({ data: workspace });
+    }
+  );
 
 export default app;
