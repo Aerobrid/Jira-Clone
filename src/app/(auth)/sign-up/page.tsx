@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { getCurrent } from "@/features/auth/actions";
+import { getCurrent } from "@/features/auth/queries";
 // Importing the SignUpCard component for the sign-up page
 import { SignUpCard } from "@/features/auth/components/sign-up-card";
 

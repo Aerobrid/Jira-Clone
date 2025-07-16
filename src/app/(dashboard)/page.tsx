@@ -1,8 +1,8 @@
 // importing the Button component from the UI library
 import { redirect } from "next/navigation";
 
-import { getCurrent } from "@/features/auth/actions";
-import { getWorkspaces } from "@/features/workspaces/actions";
+import { getCurrent } from "@/features/auth/queries";
+import { getWorkspaces } from "@/features/workspaces/queries";
 
 // Home component is the main component for the home page
 export default async function Home() {
