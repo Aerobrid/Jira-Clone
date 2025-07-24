@@ -21,6 +21,7 @@ export const GET = handle(app);
 // defining the POST route for the application
 export const POST = handle(app);
 export const PATCH = handle(app);
+export const DELETE = handle(app);
 
 // Exporting the routes type for use in other parts of the application
 export type AppType = typeof routes;
