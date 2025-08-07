@@ -7,6 +7,7 @@ import { handle } from "hono/vercel";
 // importing auth file which contains the authentication routes
 import auth from "@/features/auth/server/route";
 import workspaces from "@/features/workspaces/server/route";
+import members from "@/features/members/server/route";
 
 // creating a new Hono application instance with a base path of /api
 const app = new Hono().basePath("/api");
@@ -14,7 +15,8 @@ const app = new Hono().basePath("/api");
 // defining the /auth route and attaching the auth routes to it
 const routes = app
   .route("/auth", auth)
-  .route("/workspaces", workspaces);
+  .route("/workspaces", workspaces)
+  .route("/members", members);
 
 // defining the GET route for the application
 export const GET = handle(app);
